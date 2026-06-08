@@ -108,18 +108,18 @@ __Additional Features__
 
 ## Approach to this assignment
 
-__Learning__
-As I am totally new to Stripe APIs and payment workflows, the first thing was to learn about the Payment Intents and Elements. I mostly read through the official documentations and watched a few youtube videos to learn about them. Docs that I read include: 
+__Learning__  
+As I am totally new to Stripe APIs and payment workflows, the first thing was to learn about the Payment Intents and Elements. I mostly read through the official documentations and watched a few youtube videos to learn about them. Docs that I read include:     
 https://docs.stripe.com/payments/payment-element 
 https://docs.stripe.com/payments/payment-intents 
 
-__Planning__
+__Planning__.  
 Visualizing and drawing out the UML diagram allowed me to understand the payment flow really well. Also I referred to a step by step quickstart guide: https://docs.stripe.com/payments/quickstart to understand what needs to be done to set up basic app. Looking at the comments in the assignment code also helped with knowing where to insert the code. My plan was to get the basic functionality running first before refining. 
 
-__Implementation and Coding__
+__Implementation and Coding__. 
 Using the quick guide's sample code as skeleton code really helped me. The sample code was simple and well-explained, it was easy to build on it to achieve the basic payment functionality. Through trial and error, in addition to using Google search and Stackoverflow to help with debugging, I managed to get the basic functionality running. 
 
-__Refining__
+__Refining__. 
 I put on a hat as an evaluator and looked at code quality and the app design as a whole. I edited the code to reflect best practices. I tried to cover as much basic error handling as possible and cleaned up duplicate/dead code. I also referred to Stripe official documentation for best practices. Recommendations like having async confirmations/web hooks were picked up from there. 
 Going through this process helped me to write the Potential improvements section as well. 
 
