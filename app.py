@@ -31,6 +31,14 @@ ITEMS = {
 }
 
 
+# Look up an item's title/amount by ID, returning an error message if not found
+def get_item_data(item_id):
+    item_data = ITEMS.get(item_id)
+    if item_data:
+        return item_data["title"], item_data["amount"], None
+    return None, None, "No item selected"
+
+
 # Home route
 @app.route("/", methods=["GET"])
 def index():
@@ -47,13 +55,7 @@ def checkout():
     error = None
 
     # Fetch item data based on the item ID from the query parameter
-    item_data = ITEMS.get(item)
-    if item_data:
-        title = item_data["title"]
-        amount = item_data["amount"]
-    else:
-        # Included in layout view, feel free to assign error
-        error = "No item selected"
+    title, amount, error = get_item_data(item)
 
     return render_template(
         "checkout.html",
@@ -74,13 +76,7 @@ def create_payment():
     error = None
 
     # Fetch item data based on the item ID from the query parameter
-    item_data = ITEMS.get(item)
-    if item_data:
-        title = item_data["title"]
-        amount = item_data["amount"]
-    else:
-        # Included in layout view, feel free to assign error
-        error = "No item selected"
+    title, amount, error = get_item_data(item)
 
     # Create a PaymentIntent with the order amount and currency
     if item and amount:

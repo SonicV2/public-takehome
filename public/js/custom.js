@@ -30,7 +30,7 @@ if (form) {
     const appearance = { theme: "stripe" };
     elements = stripe.elements({ appearance, clientSecret});
 
-    const paymentElement = elements.create("payment", { layout: "accordion" });
+    const paymentElement = elements.create("payment", { layout: "accordion", wallets: { link: "never" } });
     paymentElement.mount("#payment-element");
   }
 
