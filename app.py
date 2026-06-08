@@ -106,12 +106,12 @@ def success():
         return render_template("error.html", error="No payment intent ID provided")
     try:
         intent = client.v1.payment_intents.retrieve(payment_intent_id)
-        charge = client.v1.charges.retrieve(intent.latest_charge)
         description = intent.description
     except stripe.StripeError as e:
         return render_template("error.html", error=str(e.user_message))
 
     if intent.status == "succeeded":
+        charge = client.v1.charges.retrieve(intent.latest_charge)
         return render_template(
             "success.html",
             currency=charge.currency.upper(),
