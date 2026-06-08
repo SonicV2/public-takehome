@@ -104,7 +104,7 @@ __Additional Features__
 
 - Automate tax collection. Calculate and collect the right amount of tax on Stripe transactions
 - Save customer information for future purchases
-- Implement Stripe digital wallet, Link for faster checkouts
+- Implement more payment options like Paynow which is popular in Singapore
 
 ## Approach to this assignment
 Quick Start Guide
