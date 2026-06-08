@@ -56,6 +56,8 @@ def checkout():
 
     # Fetch item data based on the item ID from the query parameter
     title, amount, error = get_item_data(item)
+    if error:
+        return jsonify({"error": error}), 400  # bad/missing item id
 
     return render_template(
         "checkout.html",
@@ -77,6 +79,8 @@ def create_payment():
 
     # Fetch item data based on the item ID from the query parameter
     title, amount, error = get_item_data(item)
+    if error:
+        return jsonify({"error": error}), 400  # bad/missing item id
 
     # Create a PaymentIntent with the order amount and currency
     if item and amount:
@@ -106,15 +110,19 @@ def success():
         description = intent.description
     except stripe.StripeError as e:
         return render_template("error.html", error=str(e.user_message))
-    return render_template(
-        "success.html",
-        currency=charge.currency.upper(),
-        amount=intent.amount / 100,
-        email=charge.receipt_email,
-        chargeId=charge.id,
-        payment_intent_id=payment_intent_id,
-        description=description,
-    )
+
+    if intent.status == "succeeded":
+        return render_template(
+            "success.html",
+            currency=charge.currency.upper(),
+            amount=intent.amount / 100,
+            email=charge.receipt_email,
+            chargeId=charge.id,
+            payment_intent_id=payment_intent_id,
+            description=description,
+        )
+    else:
+        return render_template("error.html", error="Payment did not succeed")
 
 
 if __name__ == "__main__":
