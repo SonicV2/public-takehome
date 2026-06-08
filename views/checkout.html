@@ -20,13 +20,13 @@
     </div>
     <div class="card box-shadow mt-40">
       <div class="card-body">
-        <!-- Email for Receipt -->
-        <div>
-            <label for="email">Email for Receipt</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="you@email.com">
-        </div>
         <!-- Display a payment form -->
         <form id="payment-form" data-publishable-key="{{ publishable_key }}" data-client-secret="{{ client_secret }}">
+          <!-- Email for Receipt -->
+          <div>
+            <label for="email">Email for Receipt</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="you@email.com">
+          </div>
           <div id="payment-element">
             <!--Stripe.js injects the Payment Element-->
           </div>

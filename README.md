@@ -2,7 +2,7 @@
 
 This is a simple e-commerce demo application that a customer can use to purchase a book, using Stripe Elements. This demo uses the more customizable and lower-level PaymentIntents API to charge the customer. 
 
-The demo also serves as sample code for reference. 
+The demo also serves as sample code for reference. This is not production ready code. Its main purpose is for developers to understand the core Stripe integrations quickly. 
 
 
 ## Application overview
@@ -66,7 +66,7 @@ Navigate to [http://localhost:5000](http://localhost:5000) to view the index pag
 To test out the workflow of the Stripe API call you will to purchase a book and checkout. Select the card option, paynow is not yet integrated. 
 
 <p align="center">
-<img src="readme.images/check_out.png" width="80%">
+<img src="readme.images/checkout.png" width="80%">
 </p>
 
 Fill out the test credit card details and your email. and you can find the full list of test [cards](https://stripe.com/docs/testing) here. Below is a sample for fast access. Saving your information for future checkouts is not working at the moment. 

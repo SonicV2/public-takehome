@@ -1,14 +1,14 @@
 import stripe
 import os
-
-from flask import Flask, render_template, request
+import json
+from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 
 load_dotenv()
 # Don't put any keys in code. Use an environment variable (as shown
 # here) or secrets vault to supply keys to your integration.
 # See https://docs.stripe.com/keys-best-practices
-stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
+client = stripe.StripeClient(os.getenv("STRIPE_SECRET_KEY"))
 
 app = Flask(
     __name__,
@@ -16,6 +16,19 @@ app = Flask(
     template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), "views"),
     static_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), "public"),
 )
+
+# Just hardcoding amounts here to avoid using a database
+ITEMS = {
+    "1": {"title": "The Art of Doing Science and Engineering", "amount": 2300},
+    "2": {
+        "title": "The Making of Prince of Persia: Journals 1985-1993",
+        "amount": 2500,
+    },
+    "3": {
+        "title": "Working in Public: The Making and Maintenance of Open Source",
+        "amount": 2800,
+    },
+}
 
 
 # Home route
@@ -32,18 +45,39 @@ def checkout():
     title = None
     amount = None
     error = None
-    email = request.values.get("email")
-    client_secret = None
 
-    if item == "1":
-        title = "The Art of Doing Science and Engineering"
-        amount = 2300
-    elif item == "2":
-        title = "The Making of Prince of Persia: Journals 1985-1993"
-        amount = 2500
-    elif item == "3":
-        title = "Working in Public: The Making and Maintenance of Open Source"
-        amount = 2800
+    # Fetch item data based on the item ID from the query parameter
+    item_data = ITEMS.get(item)
+    if item_data:
+        title = item_data["title"]
+        amount = item_data["amount"]
+    else:
+        # Included in layout view, feel free to assign error
+        error = "No item selected"
+
+    return render_template(
+        "checkout.html",
+        publishable_key=os.getenv("STRIPE_PUBLISHABLE_KEY"),
+        title=title,
+        amount=amount,
+        error=error,
+    )
+
+
+# Create Payment Intent route
+@app.route("/create-payment-intent", methods=["POST"])
+def create_payment():
+    data = json.loads(request.data)
+    item = data.get("item")
+    title = None
+    amount = None
+    error = None
+
+    # Fetch item data based on the item ID from the query parameter
+    item_data = ITEMS.get(item)
+    if item_data:
+        title = item_data["title"]
+        amount = item_data["amount"]
     else:
         # Included in layout view, feel free to assign error
         error = "No item selected"
@@ -51,39 +85,39 @@ def checkout():
     # Create a PaymentIntent with the order amount and currency
     if item and amount:
         try:
-            intent = stripe.PaymentIntent.create(amount=amount, currency="sgd")
-            client_secret = intent.client_secret
-        except stripe.error.StripeError as e:
+            intent = client.v1.payment_intents.create(
+                {
+                    "amount": amount,
+                    "currency": "sgd",
+                    "description": f"Purchase of {title}",
+                }
+            )
+            return jsonify({"clientSecret": intent.client_secret})
+        except stripe.StripeError as e:
             error = str(e.user_message)
-
-    return render_template(
-        "checkout.html",
-        title=title,
-        amount=amount,
-        client_secret=client_secret,
-        publishable_key=os.getenv("STRIPE_PUBLISHABLE_KEY"),
-        error=error,
-    )
+            return jsonify(error), 400
 
 
 # Success route
 @app.route("/success", methods=["GET"])
 def success():
     payment_intent_id = request.values.get("payment_intent")
-    intent = stripe.PaymentIntent.retrieve(payment_intent_id)
-    charge = stripe.Charge.retrieve(intent.latest_charge)
-    if charge.description is None:
-        description = ""
-    else:
-        description = charge.description
+    if not payment_intent_id:
+        return render_template("error.html", error="No payment intent ID provided")
+    try:
+        intent = client.v1.payment_intents.retrieve(payment_intent_id)
+        charge = client.v1.charges.retrieve(intent.latest_charge)
+        description = intent.description
+    except stripe.StripeError as e:
+        return render_template("error.html", error=str(e.user_message))
     return render_template(
         "success.html",
-        currency=charge.currency,
+        currency=charge.currency.upper(),
         amount=intent.amount / 100,
-        description=description,
         email=charge.receipt_email,
         chargeId=charge.id,
         payment_intent_id=payment_intent_id,
+        description=description,
     )
 
 

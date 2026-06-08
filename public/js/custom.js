@@ -19,8 +19,16 @@ if (form) {
   
   // Fetches a payment intent and captures the client secret
   async function initialize() {
+    const item = new URLSearchParams(window.location.search).get("item");
+    const response = await fetch("/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ item }),
+    });
+    const { clientSecret } = await response.json();
+
     const appearance = { theme: "stripe" };
-    elements = stripe.elements({ appearance, clientSecret: form.dataset.clientSecret });
+    elements = stripe.elements({ appearance, clientSecret});
 
     const paymentElement = elements.create("payment", { layout: "accordion" });
     paymentElement.mount("#payment-element");
