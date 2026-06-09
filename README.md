@@ -6,7 +6,7 @@ The demo also serves as sample code for reference. This is not production-ready 
 
 
 ## Application overview
-This demo is written in Python with the [Flask framework](https://flask.palletsprojects.com/). We're using the [Bootstrap](https://getbootstrap.com/docs/4.6/getting-started/introduction/) CSS framework. 
+This demo is written in Python with the [Flask framework](https://flask.palletsprojects.com/) and the [Bootstrap](https://getbootstrap.com/docs/4.6/getting-started/introduction/) CSS framework. 
 
 You'll need to retrieve a set of testmode API keys from the Stripe dashboard (you can create a free test account [here](https://dashboard.stripe.com/register)) to run this locally.
 
@@ -28,7 +28,6 @@ Use the Payment Intents API to build an integration that can handle complex paym
 
 - Automatic authentication handling
 - No double charges
-- No idempotency key issues
 - Support for Strong Customer Authentication (SCA) and similar regulatory changes
 
 ## Application Architecture
@@ -79,8 +78,8 @@ Expiry Date: Any Future Date
 ```
 ## Folder and File Structure
 - The flask backend server app is ./app.py. It functions as the web server, rendering web pages and doing the redirects. It makes the actual Payment Intent request to Stripe after receiving the order information from the front end.  
-- The frontend scripts (client-side) are stored in the ./public/js folder. The main JS script is custom.js where the order is made to the app server and then a payment request is made directly to Stripe.
-- Frontend web pages are stored in the ./views folder. Stripe Elements is implemented in ./views/checkout.html. Once payment is completed, users are re-directed to the success page ./views/success.html. 
+- The frontend scripts (client-side) are stored in the ./public/js folder. The main JS script is custom.js where Elements is initialized and payment confirmation to stripe is made.
+- Frontend web pages are stored in the ./views folder. Stripe Elements UI is implemented in ./views/checkout.html. Once payment is completed, users are re-directed to the success page ./views/success.html. 
 - All CSS templates are stored in the ./public/css folder with little-to-no modifications. 
 
 
@@ -109,22 +108,24 @@ __Additional Features__
 ## Approach to this assignment
 
 __Learning__  
-As I am totally new to Stripe APIs and payment workflows, the first thing was to learn about the Payment Intents and Elements. I mostly read through the official documentations and watched a few youtube videos to learn about them. Docs that I read include:     
+As I am totally new to Stripe APIs and payment workflows, the first thing to do was to learn about the Payment Intents and Elements. I mostly read through the official documentations and watched a few youtube videos to learn about them. Docs that I read include:     
 https://docs.stripe.com/payments/payment-element  
 https://docs.stripe.com/payments/payment-intents 
 
 __Planning__     
-Visualizing and drawing out the UML diagram allowed me to understand the payment flow really well. Also I referred to a step by step quickstart guide: https://docs.stripe.com/payments/quickstart to understand what needs to be done to set up basic app. Looking at the comments in the assignment code also helped with knowing where to insert the code. My plan was to get the basic functionality running first before refining. 
+Visualizing and drawing out the UML diagram allowed me to understand the payment flow really well. Also I referred to a step by step quickstart guide: https://docs.stripe.com/payments/quickstart to understand what needs to be done to set up the basic payment workflow. Looking at the comments in the assignment code also helped with knowing what to implement. My plan was to get the basic payment functionality running first before refining. 
 
 __Implementation and Coding__   
-Using the quick guide's sample code as skeleton code really helped me. The sample code was simple and well-explained, it was easy to build on it to achieve the basic payment funct ionality. Through trial and error, in addition to using Google search and Stackoverflow to help with debugging, I managed to get the basic functionality running. 
+Using the quick guide's sample code as skeleton code really helped me. The sample code was simple and well-explained, it was easy to build on it to achieve the basic payment functionality. Through trial and error, in addition to using Google search and Stackoverflow to help with debugging, I managed to get the basic functionality running. 
 
 __Refining__  
 I put on a hat as an evaluator and looked at code quality and the app design as a whole. I edited the code to reflect best practices. I tried to cover as much basic error handling as possible and cleaned up duplicate/dead code. I also referred to Stripe official documentation for best practices. Recommendations like having async confirmations/web hooks were picked up from there. 
-Going through this process helped me to write the Potential improvements section as well. 
+Going through this process helped me to write the Potential Improvements section as well. 
 
 
 ## Challenges
-My last job was a cloud platform architect for 8 years. I mostly don't have to deal with front-end code, so my HTML and JS is really rusty. Took me a while to re-familiarize myself, and a good amount of trial and error to get the front-end code right.
+My last job was a cloud platform architect for 8 years, which I mostly don't have to deal with front-end code, so my HTML and JS is really rusty. It took me a while to re-familiarize myself, and a good amount of trial and error to get the front-end code right.
+
+Also, I had a hard time deliberating whether to implement some of the potential improvements I have thought of. In the end, I decided to keep it simple as mentioned in the instructions. I believe the assignment intends for the candidate to identify the gaps instead of implementing them. 
 
 
